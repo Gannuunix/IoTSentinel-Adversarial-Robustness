@@ -17,6 +17,8 @@ Two complementary hardening strategies:
 import warnings
 warnings.filterwarnings("ignore")
 
+from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -28,8 +30,10 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 from data_gen import FEATURE_BOUNDS, generate_iot_dataset
 
-MODEL_DIR = "/home/claude/iotsentinel-adversarial/models"
-RESULTS_DIR = "/home/claude/iotsentinel-adversarial/results"
+BASE_DIR = Path(__file__).resolve().parent / "iotsentinel-adversarial"
+MODEL_DIR = BASE_DIR / "models"
+RESULTS_DIR = BASE_DIR / "results"
+DATA_PATH = BASE_DIR / "data" / "iot_flows.csv"
 
 
 def report(y_true, y_pred, label: str):
@@ -50,7 +54,7 @@ def adversarial_training():
     y_test = pd.read_csv(f"{MODEL_DIR}/y_test.csv").squeeze()
 
     # Re-derive the same train split used in baseline_model.py
-    df = pd.read_csv("/home/claude/iotsentinel-adversarial/data/iot_flows.csv")
+    df = pd.read_csv(DATA_PATH)
     X_full, y_full = df.drop(columns=["label"]), df["label"]
     from sklearn.model_selection import train_test_split
     X_train, _, y_train, _ = train_test_split(

@@ -17,6 +17,8 @@ GBM/tree ensembles aren't differentiable, so two attack strategies are used:
 import warnings
 warnings.filterwarnings("ignore")
 
+from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -25,8 +27,9 @@ from art.attacks.evasion import FastGradientMethod, HopSkipJump, ProjectedGradie
 from art.estimators.classification import KerasClassifier, SklearnClassifier
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
-MODEL_DIR = "/home/claude/iotsentinel-adversarial/models"
-RESULTS_DIR = "/home/claude/iotsentinel-adversarial/results"
+BASE_DIR = Path(__file__).resolve().parent / "iotsentinel-adversarial"
+MODEL_DIR = BASE_DIR / "models"
+RESULTS_DIR = BASE_DIR / "results"
 
 tf.compat.v1.disable_eager_execution() if False else None  # kept off; ART TF2 classifier used instead
 
@@ -117,6 +120,7 @@ def main():
     hsj_results = run_hopskipjump_attack(gbm_pipeline, X_test, y_test, n_samples=100)
 
     # Persist adversarial examples for use in hardening.py
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     np.save(f"{RESULTS_DIR}/X_adv_fgsm.npy", transfer_results["FGSM"]["X_adv"])
     np.save(f"{RESULTS_DIR}/X_adv_pgd.npy", transfer_results["PGD"]["X_adv"])
     np.save(f"{RESULTS_DIR}/X_adv_hsj.npy", hsj_results["X_adv"])

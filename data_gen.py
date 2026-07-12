@@ -9,9 +9,14 @@ To use the real dataset instead: load your CICIoT2023 / TON_IoT CSV, rename
 columns to match FEATURE_NAMES below (or just skip this generator and adapt
 the loader in baseline_model.py to read your file directly).
 """
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from sklearn.datasets import make_classification
+
+BASE_DIR = Path(__file__).resolve().parent / "iotsentinel-adversarial"
+DATA_DIR = BASE_DIR / "data"
 
 FEATURE_NAMES = [
     "flow_duration", "fwd_pkt_count", "bwd_pkt_count", "fwd_byte_count",
@@ -99,7 +104,8 @@ def generate_iot_dataset(n_samples: int = 20000, imbalance_ratio: float = 0.12,
 
 if __name__ == "__main__":
     df = generate_iot_dataset()
-    out_path = "/home/claude/iotsentinel-adversarial/data/iot_flows.csv"
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = DATA_DIR / "iot_flows.csv"
     df.to_csv(out_path, index=False)
     print(f"Generated {len(df)} rows -> {out_path}")
     print(df["label"].value_counts(normalize=True))

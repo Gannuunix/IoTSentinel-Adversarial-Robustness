@@ -81,12 +81,12 @@ noisier so the adversarial-attack effect is easy to see and explain.
 ## Setup
 
 ```bash
-pip install adversarial-robustness-toolbox scikit-learn pandas numpy imbalanced-learn tensorflow
+pip install -r requirements.txt
 
-python src/data_gen.py
-python src/baseline_model.py
-python src/attacks.py
-python src/hardening.py
+python data_gen.py
+python baseline_model.py
+python attacks.py
+python hardening.py
 ```
 
 ## Stack

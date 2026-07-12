@@ -6,6 +6,8 @@ here we use PCA for a comparable, reproducible reduction).
 
 Run standalone to train + save the baseline model and print metrics.
 """
+from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -19,12 +21,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-DATA_PATH = "/home/claude/iotsentinel-adversarial/data/iot_flows.csv"
-MODEL_DIR = "/home/claude/iotsentinel-adversarial/models"
+BASE_DIR = Path(__file__).resolve().parent / "iotsentinel-adversarial"
+DATA_PATH = BASE_DIR / "data" / "iot_flows.csv"
+MODEL_DIR = BASE_DIR / "models"
 N_PCA_COMPONENTS = 16
 
 
-def load_data(path: str = DATA_PATH):
+def load_data(path: Path = DATA_PATH):
     df = pd.read_csv(path)
     X = df.drop(columns=["label"])
     y = df["label"]
@@ -73,6 +76,7 @@ def main():
     y_pred = pipeline.predict(X_test)
     evaluate(y_test, y_pred, label="Baseline GBM (clean test set)")
 
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
     joblib.dump(pipeline, f"{MODEL_DIR}/baseline_gbm.joblib")
     X_test.to_csv(f"{MODEL_DIR}/X_test.csv", index=False)
     y_test.to_csv(f"{MODEL_DIR}/y_test.csv", index=False)
