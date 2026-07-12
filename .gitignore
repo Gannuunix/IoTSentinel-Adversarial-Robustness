@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+*/.venv/
+venv/
+*.egg-info/
+
+# Generated data/model/result artifacts (regenerate via the pipeline scripts)
+iotsentinel-adversarial/data/*
+iotsentinel-adversarial/models/*
+iotsentinel-adversarial/results/*
+
+.vscode/
+.claude/
